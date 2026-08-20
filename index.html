@@ -688,12 +688,13 @@ body.locked {
   background:linear-gradient(90deg,#b18cff,#5ec8ff,#5ee6a8);-webkit-background-clip:text;background-clip:text;color:transparent;white-space:nowrap;}
 .wcr-brand .emo{-webkit-text-fill-color:initial;}
 .wcr-header-spacer{flex:1;}
-.wcr-header-right{display:flex;align-items:center;gap:8px;flex:0 0 auto;}
+.wcr-header-right{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end;flex:0 0 auto;}
 .wcr-pill{display:flex;align-items:center;gap:5px;background:var(--card);border:1px solid var(--card-border);border-radius:16px;
   padding:5px 10px;font-size:11.5px;font-weight:600;color:var(--dim);white-space:nowrap;}
 .wcr-pill.streak{color:var(--amber);border-color:#3a2a0f;}
 .wcr-pill.premium{color:var(--amber);border-color:#3a2a0f;cursor:pointer;}
 .wcr-pill.premium.is-unlocked{color:var(--green);border-color:#0f2b22;}
+.wcr-header-right button.wcr-pill{border:none;cursor:pointer;font-family:inherit;background:var(--card);color:var(--dim);}
 .wcr-body{flex:1;display:flex;min-height:0;}
 .wcr-sidebar{width:236px;flex:0 0 236px;background:#0e1119;border-right:1px solid var(--card-border);
   padding:14px 10px 20px;overflow-y:auto;}
@@ -2058,7 +2059,23 @@ body.locked {
       <h2>⚙️ Settings</h2>
       <p>Manage what's stored on this device. Nothing here is synced anywhere — it all lives in this browser only.</p>
     </div>
-    <div id="settingsBody"></div>
+    <div id="settingsBody"><div class="wcr-card" style="background:var(--card);border:1px solid var(--card-border);border-radius:12px;padding:16px;margin-top:12px;">
+        <h3 style="margin-top:0;">My Profile</h3>
+          <div style="margin-bottom:10px;">
+              <label style="font-size:11px;color:var(--dim);text-transform:uppercase;">Email</label><br>
+                  <span id="profileEmail" style="color:var(--ink);"></span>
+                    </div>
+                      <div style="margin-bottom:10px;">
+                          <label style="font-size:11px;color:var(--dim);text-transform:uppercase;">Full Name</label><br>
+                              <input id="profileName" placeholder="Your name" style="width:100%;padding:8px;background:var(--bg);border:1px solid var(--card-border);color:var(--ink);border-radius:8px;box-sizing:border-box;">
+                                </div>
+                                  <div style="margin-bottom:10px;">
+                                      <label style="font-size:11px;color:var(--dim);text-transform:uppercase;">Specialty / Year</label><br>
+                                          <input id="profileSpecialty" placeholder="e.g. Final year, Gynae" style="width:100%;padding:8px;background:var(--bg);border:1px solid var(--card-border);color:var(--ink);border-radius:8px;box-sizing:border-box;">
+                                            </div>
+                                              <button onclick="saveProfile()" class="wcr-pill" style="border:none;cursor:pointer;padding:8px 16px;">Save Profile</button>
+                                              </div>
+    </div>
   </div>
 
   <div class="panel" id="islamPanel">
@@ -4407,6 +4424,25 @@ document.addEventListener("keydown",e=>{if(e.key==="Escape")wcrRefClose()});
   else styleExit();
 })();
 </script>
+<script>
+  function fillProfile(user) {
+    if (!user) return;
+      document.getElementById('profileEmail').textContent = user.email;
+        document.getElementById('profileName').value = user.user_metadata.full_name || '';
+          document.getElementById('profileSpecialty').value = user.user_metadata.specialty || '';
+          }
+          netlifyIdentity.on('init', fillProfile);
+          netlifyIdentity.on('login', fillProfile);
 
+          function saveProfile() {
+            const user = netlifyIdentity.currentUser();
+              if (!user) { alert('Please log in first.'); return; }
+                const name = document.getElementById('profileName').value;
+                  const specialty = document.getElementById('profileSpecialty').value;
+                    user.update({ data: { full_name: name, specialty: specialty } })
+                        .then(() => alert('Profile updated!'))
+                            .catch(err => alert('Error: ' + err.message));
+                            }
+                            </script>
 </body>
 </html>
