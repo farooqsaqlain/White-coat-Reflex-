@@ -1527,7 +1527,7 @@ body.locked {
   }
 }
 </style>
-
+<script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
 </head>
 <body class="gate-open">
 
@@ -1539,7 +1539,7 @@ body.locked {
     <div class="wcr-header-right">
       <div class="wcr-pill streak" id="wcrStreakPill">🔥 <span id="wcrStreakNum">0</span></div>
       <div class="wcr-pill premium" id="wcrPremiumPill">🔒 Free</div>
-    </div>
+    </div><button onclick="netlifyIdentity.open('signup')" class="wcr-pill">Sign Up</button>
   </header>
 
   <div class="wcr-body">
