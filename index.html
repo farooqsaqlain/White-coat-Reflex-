@@ -1540,7 +1540,7 @@ body.locked {
     <div class="wcr-header-right">
       <div class="wcr-pill streak" id="wcrStreakPill">🔥 <span id="wcrStreakNum">0</span></div>
       <div class="wcr-pill premium" id="wcrPremiumPill">🔒 Free</div>
-    </div><button onclick="netlifyIdentity.open('signup')" class="wcr-pill">Sign Up</button>
+    </div><button id="wcrSignupBtn" onclick="netlifyIdentity.open('signup')" style="background:linear-gradient(90deg,#b18cff,#5ec8ff);color:#0b0d12;border:none;padding:8px 18px;border-radius:20px;font-weight:700;font-size:12px;cursor:pointer;white-space:nowrap;">Sign Up</button>
   </header>
 
   <div class="wcr-body">
@@ -4433,6 +4433,14 @@ document.addEventListener("keydown",e=>{if(e.key==="Escape")wcrRefClose()});
           }
           netlifyIdentity.on('init', fillProfile);
           netlifyIdentity.on('login', fillProfile);
+function updateSignupVisibility(user) {
+    var btn = document.getElementById('wcrSignupBtn');
+      if (!btn) return;
+        btn.style.display = user ? 'none' : 'inline-block';
+        }
+        netlifyIdentity.on('init', updateSignupVisibility);
+        netlifyIdentity.on('login', () => updateSignupVisibility(netlifyIdentity.currentUser()));
+        netlifyIdentity.on('logout', () => updateSignupVisibility(null));
 
           function saveProfile() {
             const user = netlifyIdentity.currentUser();
